@@ -1,0 +1,128 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: 'Open Sans', Arial, sans-serif; /* Consistent Sans-serif font */
+    font-size: 16px; /* Standard font size */
+    line-height: 1.6; /* Adequate line spacing */
+    color: #333; /* High contrast text color */
+    background-color: #f4f4f4; /* Light background for the main area */
+    max-width: 800px; /* Optimal line length */
+    margin: 0 auto; /* Center the content */
+    padding: 20px; /* Padding around the content */
+    
+}
+
+header {
+    background-color: #0056b3; /* Slightly darker for better contrast */
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Georgia', Times, serif; /* Serif font for headers */
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+h1 {
+    font-size: 2em; /* Larger font size for main heading */
+}
+
+h2 { font-size: 1.75em; }
+h3 { font-size: 1.5em; }
+h4 { font-size: 1.25em; }
+h5 { font-size: 1.125em; }
+h6 { font-size: 1em; }
+
+p {
+    margin-bottom: 1em; /* Space between paragraphs */
+}
+
+a {
+    color: #0066cc; /* Accessible link color */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+
+main {
+    padding: 20px;
+}
+
+.conversation {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    background-color: #e9ecef;
+    border-left: 5px solid #007bff; /* Adds a distinguishing feature to messages */
+    font-weight: 460;
+}
+
+.user-message {
+    background-color: #f8f9fa;
+    text-align: left;
+    border-color: #28a745; /* Different color for user messages */
+}
+
+.system-response {
+    background-color: #e9ecef;
+    text-align: left;
+    border-color: #17a2b8; /* Different color for system responses */
+}
+
+.time-stamp {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-bottom: 15px;
+    text-align: right; /* Aligns timestamp to the right */
+}
+
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 600px) {
+    body {
+        font-size: 14px; /* Slightly smaller font size on small screens */
+    }
+
+    h1 { font-size: 1.75em; }
+    h2 { font-size: 1.5em; }
+    h3 { font-size: 1.25em; }
+    h4 { font-size: 1.125em; }
+    h5 { font-size: 1em; }
+    h6 { font-size: 0.875em; }
+}
+
+/* Accessibility enhancements */
+:focus {
+    outline: 3px solid #ffbf47; /* Highlight focus for keyboard navigation */
+}
+.message pre {
+    background-color: inherit; /* Ensures background matches the message div */
+    border: none; /* Removes the default border */
+    margin: 0; /* Adjust margin to fit within message divs */
+    padding: 0; /* Ensures padding matches surrounding content */
+    font-family: 'Open Sans', Arial, sans-serif; /* Ensures font consistency */
+    font-size: 1em; /* Matches font size of the surrounding text */
+    line-height: 1.6; /* Ensures line spacing is consistent */
+    white-space: pre-wrap; /* Maintains whitespace formatting but allows wrapping */
+    color: inherit; /* Ensures text color matches the surrounding text */
+}
