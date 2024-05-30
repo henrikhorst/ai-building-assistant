@@ -87,7 +87,14 @@ def execute_processing(pdf_files_content, question, system_prompt_1, client):
     """
     responses = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future_to_pdf = {executor.submit(process_pdf, k, v, question, system_prompt_1, client): k for k, v in pdf_files_content.items()}
+        # Submit the get_local_info function first and add it to the dictionary
+        local_info_future = executor.submit(get_local_info, question, system_prompt_1, client)
+        future_to_pdf = {local_info_future: 'local_info'}
+        
+        # Create futures for processing PDFs and add them to the dictionary
+        future_to_pdf.update({executor.submit(process_pdf, k, v, question, system_prompt_1, client): k for k, v in pdf_files_content.items()})
+
+        # Process the futures
         for future in concurrent.futures.as_completed(future_to_pdf):
             pdf_key = future_to_pdf[future]
             try:
@@ -96,3 +103,42 @@ def execute_processing(pdf_files_content, question, system_prompt_1, client):
             except Exception as exc:
                 print(f'{pdf_key} generated an exception: {exc}')
     return responses
+
+def get_local_info(question, system_prompt_1, client):
+    prompt = f"""Schritte zur Prüfung und Beantwortung der Anfrage
+    Erfassen Sie die Anfrage und überprüfen Sie, ob spezifische geografische Gebiete erwähnt werden.
+       
+    Kategorisierung der Gebiete
+
+    Unterteilen Sie die genannten Gebiete in zwei Kategorien:
+    - Gebiete in Kiel
+    - Gebiete außerhalb von Kiel
+
+    Falls keine spezifischen Gebiete in der Anfrage genannt werden, gehen Sie davon aus, dass die Anfrage sich auf Kiel bezieht.
+
+    Beispiel: „Da in Ihrer Anfrage keine spezifischen Gebiete genannt wurden, gehen wir davon aus, dass sich Ihre Anfrage auf Kiel bezieht. Hier sind die Informationen: …“
+    
+    Beispiel zur Umsetzung
+    Anfrage erhalten:
+
+    „Ich hätte gerne Informationen über die Bauordnung in Wellingdorf, Düsternbrook und Mönkeberg.“
+    
+    Kategorisierung der Gebiete:
+    Für folgende Gebiete können wir eine Auskunft erteilen, da sie in Kiel liegen
+    Gebiete in Kiel: Wellingdorf, Düsternbrook
+    Für folgende Gebiete können wir keine Auskunft erteilen und verweisen auch die lokalen zuständigen Behörden
+    Gebiete außerhalb von Kiel: Mönkeberg
+    
+    Hier die konkrete zu beantwortende Anfrage:
+    {question}"""
+    messages = [
+        {"role": "system", "content": system_prompt_1},
+        {"role": "user", "content": prompt}
+    ]
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        messages=messages,
+        temperature=0.0
+    )
+
+    return ('local_info', completion)

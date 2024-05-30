@@ -12,7 +12,7 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 
 if "openai_model" not in st.session_state:
-    st.session_state["model"] = "gpt-4-turbo"
+    st.session_state["model"] = "gpt-4o"
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
