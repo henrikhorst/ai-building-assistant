@@ -10,13 +10,15 @@ st.title("🏗️ AI Building Assistant🤖")
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
+system_message = "Du bist ein hilfreicher Fragenbeantworter der Baubehörde Kiel, der Fragen allein anhand der zur Verfügung gestellten Landesbauordnung(LBO) freundlich und wertschätzend dem Bürger gegenüber beantwortet"
+
 
 if "openai_model" not in st.session_state:
     st.session_state["model"] = "gpt-4o"
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "system", "content": helper_app.system_prompt_2},
+        {"role": "system", "content": system_message},
       ]
 
 for message in st.session_state.messages[1:]:
@@ -32,12 +34,7 @@ if question := st.chat_input("Wie kann ich helfen?"):
 
 
     with st.chat_message("assistant"):
-        responses = helper_app.execute_processing(helper_app.pdf_files_content, question, helper_app.system_prompt_1, client)
-        info_str = ""
-        for k, completion in responses:
-            info_str+= "\n\n---------\n\n" + completion.choices[0].message.content
-        content ="Information:\n" + info_str + "\n\n-----------\n\n" + "Nutze die bereitgestellten Informationen, um mit den relevanten Informationen die Anfrage nutzerfreundlich zu beantworten. Die Anfrage ist: \n" +question
-        
+        content = helper_app.lbo_text + "\n\n---\n\n" + "Nutze die bereitgestellten Informationen, um mit den relevanten Informationen die Anfrage nutzerfreundlich zu beantworten. Die Anfrage ist: \n" + question
         stream = client.chat.completions.create(
             model=st.session_state["model"],
             messages=[
